@@ -1,5 +1,5 @@
 # Embedded Systems Project
-Implementation of an optimized finite impulse response filter.
+Implementation of an optimized finite impulse response filter for SENG440 design project.  
 Contained is also a program for generating N number of coefficients and M number of inputs.
 
 Usage: .\FIR_Optimized coeffs.txt inputs.txt
