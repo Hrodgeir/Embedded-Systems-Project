@@ -84,4 +84,6 @@ int main(int argc, char* argv[])
         create_coeffs_files(atoi(argv[1]));
         create_inputs_files(atoi(argv[2]));
     }
+
+    return 0;
 }
