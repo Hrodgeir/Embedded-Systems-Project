@@ -2,7 +2,7 @@
 Implementation of an optimized finite impulse response filter.
 Contained is also a program for generating N number of coefficients and M number of inputs.
 
-Usage: .\FIR_Optimized [Number of Coefficients] [Number of Inputs]
+Usage: .\FIR_Optimized coeffs.txt inputs.txt
 
 ## Implementation Details
 
