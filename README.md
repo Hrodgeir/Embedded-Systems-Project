@@ -6,7 +6,7 @@ Usage: .\FIR_Optimized coeffs.txt inputs.txt
 
 ## FIR Filter Equation
 
-y(n) = ∑h(k)⋅x(n-k)
+![fir](https://user-images.githubusercontent.com/10039065/28236129-853cef20-68d2-11e7-87fe-278313d6bbc8.PNG)
 
 ## Implementation Details
 
