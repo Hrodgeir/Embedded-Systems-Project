@@ -4,6 +4,10 @@ Contained is also a program for generating N number of coefficients and M number
 
 Usage: .\FIR_Optimized coeffs.txt inputs.txt
 
+## FIR Filter Equation
+
+y(n) = ∑h(k)⋅x(n-k)
+
 ## Implementation Details
 
 The coefficients are represented as 8-bit unsigned integers.  
