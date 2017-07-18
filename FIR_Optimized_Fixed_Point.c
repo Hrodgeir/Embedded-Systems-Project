@@ -3,9 +3,7 @@
 #include <time.h>
 #include <stdint.h>
 
-// Optimizations:
-// 1. Restrict arrays to promise unique memory locations
-void FIR(uint8_t* __restrict coeffs, int8_t* __restrict inputs, int8_t* __restrict outputs, int n_coeffs, int n_inputs, int n_outputs)
+void FIR(uint8_t* coeffs, int8_t* inputs, int8_t* outputs, int n_coeffs, int n_inputs, int n_outputs)
 {
     /*
     A fixed point arithmetic implementation of an FIR filter.
@@ -19,32 +17,20 @@ void FIR(uint8_t* __restrict coeffs, int8_t* __restrict inputs, int8_t* __restri
     Coeff Range: 0 to 256
     */
 
-    // Optimizations:
-    // 1. Request registers for commonly accessed values
-    register int n, k, j;
-    register int16_t acc;
+    int n, k, j;
+    int16_t acc;
 
     // Loop over the number of outputs to be generated
-    // Optimizations:
-    //  1. n ^= n         : 1 Cycle
-    //  2. n != n_outputs : 1 Cycle
-    for (n ^= n; n != n_outputs; n++)
+    for (n = 0; n < n_outputs; n++)
     {
         acc = 0;
 
         // Loop over the number of coefficients
-        // Optimizations:
-        //  1. k ^= k        : 1 Cycle
-        //  2. k != n_coeffs : 1 Cycle
-        for (k ^= k; k != n_coeffs; k++)
+        for (k = 0; k < n_coeffs; k++)
         {
             j = n - k;
 
             // Multiply and accumulate for valid input range
-            // Optimizations:
-            // 1. Enforce MAC operations by compiling with -O3
-            //    Saves a large number of cycles by performing SIMD operations
-            // 2. Optimize if condition?
             if (j >= 0 && j < n_inputs)
             {
                 acc += coeffs[k] * inputs[j];
@@ -52,9 +38,7 @@ void FIR(uint8_t* __restrict coeffs, int8_t* __restrict inputs, int8_t* __restri
         }
 
         // Store the result in the output array
-        // Optimizations:
-        // 1. Increase precision by introducing rounding
-        outputs[n] = ((acc >> 6) + 1) >> 1;
+        outputs[n] = (acc >> 7);
     }
 }
 

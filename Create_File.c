@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <time.h>
 #include <math.h>
 
@@ -27,12 +28,12 @@ void write_to_file(float* array, FILE* fpr, FILE* fps, int n, int is_coeffs)
 
         if (is_coeffs)
         {
-            unsigned char scaled = (unsigned char)(array[i] * 128);
+            uint8_t scaled = (uint8_t)(roundf(array[i] * 256));
             fprintf(fps, "%d\n", scaled);
         }
         else
         {
-            char scaled = (char)(array[i] * 128);
+            int8_t scaled = (int8_t)(roundf(array[i] * 128));
             fprintf(fps, "%d\n", scaled);
         }
     }
@@ -74,14 +75,14 @@ int main(int argc, char* argv[])
     // Error handling
     if (argc != 3)
     {
-        printf("Usage: %s [Number of Coefficients] [Number of Inputs]", argv[0]);
+        printf("Usage: %s [Number of Coefficients] [Number of Inputs]\n", argv[0]);
     }
     else
     {
         // Initialize the randomizer
         srand(time(NULL));
 
-        create_coeffs_files(atoi(argv[1]));
+        //create_coeffs_files(atoi(argv[1]));
         create_inputs_files(atoi(argv[2]));
     }
 

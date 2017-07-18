@@ -1,25 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <time.h>
 
 void FIR(float* coeffs, float* inputs, float* outputs, int n_coeffs, int n_inputs)
 {
+    /*
+    A naive implementation of an FIR filter.
+    This version of the filter takes float arrays as inputs to the system.
+    
+    Input Range: -1.00 to +1.00
+    Coefficient Range: 0 to +1.00
+    */
+
     int n;
+
+    // Loop over the number of outputs to be generated
     for (n = 0; n < n_inputs+n_coeffs-1; n++)
     {
         int k;
         float acc = 0;
+
+        // Loop over the number of coefficients
         for (k = 0; k < n_coeffs; k++)
         {
             int j = n - k;
+
+            // Multiply and accumulate for valid input range
             if (j >= 0 && j < n_inputs)
             {
                 acc += coeffs[k] * inputs[j];
             }
         }
 
+        // Populate the output at time n
         outputs[n] = acc;
-        printf("Output %d: %f\n", n+1, outputs[n]);
     }
 }
 
@@ -28,7 +43,7 @@ int main(int argc, char* argv[])
     // Error handling
     if (argc != 3)
     {
-        printf("Usage: %s real_coeffs.txt real_input.txt", argv[0]);
+        printf("Usage: %s real_coeffs.txt real_input.txt\n", argv[0]);
     }
     else
     {
@@ -55,7 +70,7 @@ int main(int argc, char* argv[])
             char tmp[6];
             fgets(tmp, 6, fp_coeffs);
             coeffs[i] = atof(tmp);
-            printf("Coeff %d: %f\n", i+1, coeffs[i]);
+            printf("Coeff %d: %f\n", i, coeffs[i]);
         }
 
         // Open inputs file and store in array
@@ -81,12 +96,20 @@ int main(int argc, char* argv[])
             char tmp[7];
             fgets(tmp, 7, fp_inputs);
             inputs[j] = atof(tmp);
-            printf("Input %d: %f\n", j+1, inputs[j]);
+            printf("Input %d: %f\n", j, inputs[j]);
         }
 
         // Pass values into FIR filter
-        float outputs[n_inputs+n_coeffs-1];
+        int n_outputs = n_inputs + n_coeffs - 1;
+        float outputs[n_outputs];
         FIR(coeffs, inputs, outputs, n_coeffs, n_inputs);
+
+        // Display the results
+        int k;
+        for (k = 0; k < n_outputs; k++)
+        {
+            printf("Output %d: %f = %d\n", k, outputs[k], (int)(outputs[k]*128));
+        }
     }
 
     return 0;
