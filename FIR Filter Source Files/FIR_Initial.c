@@ -83,8 +83,8 @@ int main(int argc, char* argv[])
             printf("Error opening inputs file.\n");
         }
 
-        char inputs_size[6];
-        fgets(inputs_size, 6, fp_inputs);
+        char inputs_size[8];
+        fgets(inputs_size, 8, fp_inputs);
         int n_inputs = atoi(inputs_size);
         float inputs[n_inputs];
 
@@ -102,7 +102,11 @@ int main(int argc, char* argv[])
         // Pass values into FIR filter
         int n_outputs = n_inputs + n_coeffs - 1;
         float outputs[n_outputs];
+
+        clock_t start, end;
+        start = clock();
         FIR(coeffs, inputs, outputs, n_coeffs, n_inputs);
+        end = clock();
 
         // Display the results
         int k;
@@ -110,6 +114,9 @@ int main(int argc, char* argv[])
         {
             printf("Output %d: %f = %d\n", k, outputs[k], (int)(outputs[k]*128));
         }
+
+        // Display the time taken
+        printf("Time Taken: %f\n", ((double)(end - start)) / CLOCKS_PER_SEC);
     }
 
     return 0;

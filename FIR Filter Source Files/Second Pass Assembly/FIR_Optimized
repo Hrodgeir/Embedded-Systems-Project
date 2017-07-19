@@ -1,0 +1,293 @@
+	.arch armv4t
+	.fpu softvfp
+	.eabi_attribute 20, 1
+	.eabi_attribute 21, 1
+	.eabi_attribute 23, 3
+	.eabi_attribute 24, 1
+	.eabi_attribute 25, 1
+	.eabi_attribute 26, 2
+	.eabi_attribute 30, 2
+	.eabi_attribute 18, 4
+	.file	"FIR_Optimized.c"
+	.text
+	.align	2
+	.global	FIR
+	.type	FIR, %function
+FIR:
+	@ Function supports interworking.
+	@ args = 8, pretend = 0, frame = 0
+	@ frame_needed = 0, uses_anonymous_args = 0
+	@ link register save eliminated.
+	stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp}
+	ldr	ip, [sp, #36]
+	cmp	ip, #0
+	mov	sl, r0
+	mov	fp, r1
+	mov	r9, r2
+	mov	r6, r3
+	ldr	r8, [sp, #32]
+	movne	r7, #0
+	beq	.L8
+.L3:
+	cmp	r6, #0
+	movne	r0, #0
+	moveq	r3, r6
+	movne	ip, r7
+	addne	r4, fp, r7
+	movne	r5, r0
+	beq	.L7
+.L5:
+	mvn	r3, ip
+	mov	r3, r3, lsr #31
+	cmp	ip, r8
+	movge	r3, #0
+	cmp	r3, #0
+	ldrnesb	r1, [r4, #0]
+	ldrneb	r2, [sl, r0]	@ zero_extendqisi2
+	mlane	r3, r2, r1, r5
+	add	r0, r0, #1
+	movne	r3, r3, asl #16
+	movne	r5, r3, lsr #16
+	cmp	r6, r0
+	sub	ip, ip, #1
+	sub	r4, r4, #1
+	bne	.L5
+	mov	r3, r5, asl #16
+	mov	r3, r3, asr #22
+	add	r3, r3, #1
+	mov	r3, r3, asr #1
+	and	r3, r3, #255
+.L7:
+	strb	r3, [r9, r7]
+	ldr	r3, [sp, #36]
+	add	r7, r7, #1
+	cmp	r3, r7
+	bne	.L3
+.L8:
+	ldmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp}
+	bx	lr
+	.size	FIR, .-FIR
+	.align	2
+	.global	main
+	.type	main, %function
+main:
+	@ Function supports interworking.
+	@ args = 0, pretend = 0, frame = 40
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+	cmp	r0, #3
+	add	fp, sp, #32
+	sub	sp, sp, #44
+	mov	r8, r1
+	beq	.L12
+	ldr	r1, [r1, #0]
+	ldr	r0, .L35
+	bl	printf
+.L13:
+	mov	r0, #0
+	sub	sp, fp, #32
+	ldmfd	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+	bx	lr
+.L12:
+	ldr	r0, [r1, #4]
+	ldr	r1, .L35+4
+	bl	fopen
+	subs	r6, r0, #0
+	str	sp, [fp, #-72]
+	beq	.L33
+.L14:
+	sub	r4, fp, #42
+	mov	r1, #6
+	mov	r2, r6
+	mov	r0, r4
+	bl	fgets
+	mov	r1, #0
+	mov	r2, #10
+	mov	r0, r4
+	bl	strtol
+	add	r3, r0, #14
+	bic	r3, r3, #7
+	sub	sp, sp, r3
+	mov	r7, r0
+	mov	r3, sp
+	mov	r2, r3, lsr #3
+	ldr	r0, .L35+8
+	mov	r1, r7
+	mov	sl, r2, asl #3
+	bl	printf
+	cmp	r7, #0
+	ble	.L15
+	mov	r4, #0
+	sub	r5, fp, #48
+.L16:
+	mov	r1, #6
+	mov	r2, r6
+	mov	r0, r5
+	bl	fgets
+	mov	r1, #0
+	mov	r2, #10
+	mov	r0, r5
+	bl	strtol
+	and	r2, r0, #255
+	strb	r2, [sl, r4]
+	mov	r1, r4
+	ldr	r0, .L35+12
+	add	r4, r4, #1
+	bl	printf
+	cmp	r4, r7
+	blt	.L16
+.L15:
+	ldr	r0, [r8, #8]
+	ldr	r1, .L35+4
+	bl	fopen
+	subs	r8, r0, #0
+	beq	.L34
+.L17:
+	sub	r4, fp, #54
+	mov	r1, #6
+	mov	r2, r8
+	mov	r0, r4
+	bl	fgets
+	mov	r1, #0
+	mov	r2, #10
+	mov	r0, r4
+	bl	strtol
+	add	r3, r0, #14
+	bic	r3, r3, #7
+	sub	sp, sp, r3
+	mov	r3, sp
+	mov	r6, r0
+	mov	r2, r3, lsr #3
+	mov	r2, r2, asl #3
+	ldr	r0, .L35+16
+	mov	r1, r6
+	str	r2, [fp, #-76]
+	bl	printf
+	cmp	r6, #0
+	ble	.L18
+	mov	r4, #0
+	sub	r5, fp, #61
+.L19:
+	mov	r1, #7
+	mov	r2, r8
+	mov	r0, r5
+	bl	fgets
+	mov	r1, #0
+	mov	r2, #10
+	mov	r0, r5
+	bl	strtol
+	ldr	r3, [fp, #-76]
+	and	r0, r0, #255
+	mov	r2, r0, asl #24
+	strb	r0, [r3, r4]
+	mov	r1, r4
+	mov	r2, r2, asr #24
+	add	r4, r4, #1
+	ldr	r0, .L35+20
+	bl	printf
+	cmp	r4, r6
+	blt	.L19
+.L18:
+	sub	r3, r7, #1
+	add	r8, r3, r6
+	add	r2, r8, #14
+	bic	r2, r2, #7
+	sub	sp, sp, r2
+	mov	r2, sp
+	cmp	r8, #0
+	mov	r3, r2, lsr #3
+	mov	r9, r3, asl #3
+	movne	r5, #0
+	beq	.L20
+.L21:
+	cmp	r7, #0
+	moveq	r3, r7
+	beq	.L26
+	ldr	r3, [fp, #-76]
+	mov	ip, #0
+	mov	r0, r5
+	add	lr, r3, r5
+	mov	r4, ip
+.L23:
+	cmp	r0, #0
+	cmpge	r6, r0
+	ldrgtsb	r1, [lr, #0]
+	ldrgtb	r2, [sl, ip]	@ zero_extendqisi2
+	mlagt	r3, r2, r1, r4
+	add	ip, ip, #1
+	movgt	r3, r3, asl #16
+	movgt	r4, r3, lsr #16
+	cmp	r7, ip
+	sub	r0, r0, #1
+	sub	lr, lr, #1
+	bne	.L23
+	mov	r3, r4, asl #16
+	mov	r3, r3, asr #22
+	add	r3, r3, #1
+	mov	r3, r3, asr #1
+	and	r3, r3, #255
+.L26:
+	strb	r3, [r9, r5]
+	add	r5, r5, #1
+	cmp	r8, r5
+	bne	.L21
+	mov	r4, #0
+.L27:
+	mov	r1, r4
+	ldrsb	r2, [r9, r4]
+	ldr	r0, .L35+24
+	add	r4, r4, #1
+	bl	printf
+	cmp	r8, r4
+	bgt	.L27
+.L20:
+	ldr	sp, [fp, #-72]
+	b	.L13
+.L33:
+	ldr	r0, .L35+28
+	bl	puts
+	b	.L14
+.L34:
+	ldr	r0, .L35+32
+	bl	puts
+	b	.L17
+.L36:
+	.align	2
+.L35:
+	.word	.LC0
+	.word	.LC1
+	.word	.LC3
+	.word	.LC4
+	.word	.LC6
+	.word	.LC7
+	.word	.LC8
+	.word	.LC2
+	.word	.LC5
+	.size	main, .-main
+	.section	.rodata.str1.4,"aMS",%progbits,1
+	.align	2
+.LC0:
+	.ascii	"Usage: %s coeffs.txt input.txt\012\000"
+.LC1:
+	.ascii	"r\000"
+	.space	2
+.LC2:
+	.ascii	"Error opening coefficients file.\000"
+	.space	3
+.LC3:
+	.ascii	"Coeff Size: %d\012\000"
+.LC4:
+	.ascii	"Coeff %d: %d\012\000"
+	.space	2
+.LC5:
+	.ascii	"Error opening inputs file.\000"
+	.space	1
+.LC6:
+	.ascii	"Input Size: %d\012\000"
+.LC7:
+	.ascii	"Input %d: %d\012\000"
+	.space	2
+.LC8:
+	.ascii	"Output %d: %d\012\000"
+	.ident	"GCC: (Sourcery G++ Lite 2008q3-72) 4.3.2"
+	.section	.note.GNU-stack,"",%progbits
