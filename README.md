@@ -17,7 +17,8 @@ The binary decimal point is located at 2^7, or 00.000000.
 The range of accepted inputs is from -1.00 to +1.00.  
 This results in a scaling factor of 2^7, or 128.
 
-## Optimizations Will Include:
- - Software Pipelining
+## Optimizations Include:
+ - MAC Instructions
  - Vector Operations
  - Operation Strength Reduction
+ - Loop Initialization and Termination
